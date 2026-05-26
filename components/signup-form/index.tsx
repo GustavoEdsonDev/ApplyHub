@@ -75,28 +75,46 @@ export function SignupForm() {
     startTransition(async () => {
       try {
         const supabase = createClient()
-        const emailRedirectTo = `${window.location.origin}/auth/callback`
+
+        // Para usar emailRedirectTo, você precisa configurar as Redirect URLs no Supabase
+        // Vá em Authentication > URL Configuration e adicione: http://localhost:3000/auth/callback
+        const emailRedirectTo = typeof window !== 'undefined' 
+          ? `${window.location.origin}/auth/callback`
+          : 'http://localhost:3000/auth/callback'
 
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo },
+          options: { 
+            emailRedirectTo,
+          },
         })
 
         if (signUpError) {
-          setError(signUpError.message)
+          console.error('Signup error:', signUpError)
+          
+          // Se receber erro de CORS/Network, é problema de configuração no Supabase
+          if (signUpError.message?.includes('CORS') || signUpError.message?.includes('Failed to fetch')) {
+            setError('Erro de conexão. Verifique se as Redirect URLs estão configuradas no Supabase Dashboard em Authentication > URL Configuration.')
+          } else {
+            setError(signUpError.message)
+          }
           return
         }
 
+        // Se houver sessão, email confirmation está desabilitado e usuário entrou direto
         if (data.session) {
           router.replace('/')
           router.refresh()
           return
         }
 
-        setSuccess('Conta criada! Verifique seu email para confirmar.')
+        // Sem sessão = email confirmation habilitado, aguardando confirmação
+        setSuccess('Conta criada! Verifique seu email para confirmar o cadastro.')
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao criar conta.')
+        const message = err instanceof Error ? err.message : 'Erro desconhecido ao criar conta'
+        console.error('Catch error:', err)
+        setError(message)
       }
     })
   }
