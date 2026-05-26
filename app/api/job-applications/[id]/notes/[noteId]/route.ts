@@ -1,0 +1,117 @@
+import { createClient } from '@/lib/supabase/server'
+import { type ApplicationNote, type ApiResponse } from '@/lib/types'
+import { NextRequest, NextResponse } from 'next/server'
+
+type Params = { id: string; noteId: string }
+
+export async function PATCH(request: NextRequest, context: { params: Promise<Params> }) {
+  try {
+    const { id: application_id, noteId } = await context.params
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' } as const,
+        { status: 401 }
+      )
+    }
+
+    const body = await request.json()
+    const { content } = body
+
+    if (!content) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required field: content' },
+        { status: 400 }
+      )
+    }
+
+    // Ensure application belongs to user
+    const { data: app, error: appError } = await supabase
+      .from('job_applications')
+      .select('id')
+      .eq('id', application_id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (appError || !app) {
+      return NextResponse.json(
+        { success: false, error: 'Job application not found' },
+        { status: 404 }
+      )
+    }
+
+    const { data, error } = await supabase
+      .from('application_notes')
+      .update({
+        content,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', noteId)
+      .eq('application_id', application_id)
+      .eq('user_id', user.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return NextResponse.json({
+      success: true,
+      data,
+    } as ApiResponse<ApplicationNote>)
+  } catch (error) {
+    console.error('PATCH /api/job-applications/[id]/notes/[noteId] error:', error)
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(_request: NextRequest, context: { params: Promise<Params> }) {
+  try {
+    const { id: application_id, noteId } = await context.params
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' } as const,
+        { status: 401 }
+      )
+    }
+
+    // Ensure application belongs to user
+    const { data: app, error: appError } = await supabase
+      .from('job_applications')
+      .select('id')
+      .eq('id', application_id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (appError || !app) {
+      return NextResponse.json(
+        { success: false, error: 'Job application not found' },
+        { status: 404 }
+      )
+    }
+
+    const { error } = await supabase
+      .from('application_notes')
+      .delete()
+      .eq('id', noteId)
+      .eq('application_id', application_id)
+      .eq('user_id', user.id)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true, data: null } as ApiResponse<null>)
+  } catch (error) {
+    console.error('DELETE /api/job-applications/[id]/notes/[noteId] error:', error)
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
