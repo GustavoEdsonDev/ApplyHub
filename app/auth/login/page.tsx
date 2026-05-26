@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
-
 import { createClient } from '@/lib/supabase/server'
 import { LoginForm } from '@/components/login-form'
+import Link from 'next/link'
+import { Separator } from '@/components/ui/separator'
 
 export default async function LoginPage() {
   const supabase = await createClient()
@@ -22,8 +23,14 @@ export default async function LoginPage() {
             Use seu email e senha para acessar.
           </p>
         </header>
-
         <LoginForm />
+        <div className="py-5">
+          <Separator />
+        </div>
+        Não tem uma conta? {""}
+        <Link href="/auth/signup" className="text-foreground underline underline-offset-4">
+           Crie uma aqui
+        </Link>
       </main>
     </div>
   )
