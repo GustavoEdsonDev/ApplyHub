@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Mail, Code } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -15,7 +16,7 @@ export default function HomePage() {
       <header className="border-b">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link href="/" className="text-xl font-bold">
-            HireTrack
+            ApplyHub
           </Link>
 
           <nav className="flex items-center gap-3">
@@ -41,7 +42,7 @@ export default function HomePage() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            O HireTrack ajuda você a acompanhar vagas, empresas, salários,
+            O ApplyHub ajuda você a acompanhar vagas, empresas, salários,
             stacks exigidas, status das candidaturas e anotações importantes
             durante sua busca por emprego.
           </p>
@@ -139,6 +140,62 @@ export default function HomePage() {
           </Card>
         </div>
       </section>
+        <footer className="border-t bg-card px-4 py-10 text-muted-foreground sm:px-6 sm:py-12 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 grid gap-10 md:grid-cols-2 md:gap-12">
+            <div>
+              <div className="mb-4 flex items-center gap-2">
+                <h3 className="text-xl font-semibold text-foreground">
+                  ApplyHub
+                </h3>
+              </div>
+
+              <p className="mb-4 text-sm">
+                Uma aplicação moderna de gerenciamento financeiro criada para
+                ajudar você a controlar seu dinheiro com facilidade e confiança.
+              </p>
+
+              <p className="text-sm text-muted-foreground">
+                Criado com Next.js, TypeScript e Supabase para uma experiência
+                fluida.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="mb-4 font-semibold text-foreground">
+                Conecte-se com o Desenvolvedor
+              </h4>
+
+              <div className="space-y-3">
+                <a
+                  href="https://github.com/GustavoEdsonDev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm transition hover:text-primary"
+                >
+                  <Code className="size-4" />
+                  <span>GitHub: GustavoEdsonDev</span>
+                </a>
+
+                <a
+                  href="mailto:gustavoedsonunnunes@gmail.com"
+                  className="flex items-center gap-2 text-sm transition hover:text-primary"
+                >
+                  <Mail className="size-4" />
+                  <span className="break-all">gustavoedsonunnunes@gmail.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t pt-8 text-center text-xs sm:text-sm">
+            <p>
+              &copy; 2026 ApplyHub - Desenvolvido por Gustavo Edson. Todos os
+              direitos reservados.
+            </p>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }
