@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Trash2, Star } from 'lucide-react'
+import DeleteJobButton from '@/components/delete-job-button'
+import { getStatusLabel, getWorkModeLabel, getSeniorityLabel } from '@/lib/label-helpers'
 
 interface JobPageProps {
   params: Promise<{ id: string }>
@@ -34,6 +37,7 @@ export default async function JobDetailPage(props: JobPageProps) {
           <p className="text-lg text-muted-foreground">{job.company_name}</p>
         </div>
         <div className="flex gap-4">
+          <DeleteJobButton jobId={params.id} />
           <Button variant="outline" asChild>
             <Link href={`/dashboard/jobs/${params.id}/edit`}>Editar</Link>
           </Button>
@@ -63,11 +67,11 @@ export default async function JobDetailPage(props: JobPageProps) {
               )}
               <div>
                 <p className="text-sm text-muted-foreground">Modelo de trabalho</p>
-                <p>{job.work_mode || 'N/A'}</p>
+                <p>{getWorkModeLabel(job.work_mode) || 'N/A'}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Senioridade</p>
-                <p>{job.seniority || 'N/A'}</p>
+                <p>{getSeniorityLabel(job.seniority) || 'N/A'}</p>
               </div>
             </div>
           </div>
@@ -85,7 +89,7 @@ export default async function JobDetailPage(props: JobPageProps) {
                     : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
               }`}
             >
-              {job.status}
+              {getStatusLabel(job.status)}
             </span>
           </div>
 
@@ -100,7 +104,16 @@ export default async function JobDetailPage(props: JobPageProps) {
 
           <div className="rounded-lg border bg-card p-6">
             <p className="text-sm text-muted-foreground mb-2">Favorita</p>
-            <p>{job.is_favorite ? '⭐ Sim' : 'Não'}</p>
+            <div className="flex items-center gap-2">
+              {job.is_favorite ? (
+                <>
+                  <Star size={18} className="fill-yellow-400 text-yellow-400" />
+                  <span>Sim</span>
+                </>
+              ) : (
+                <span>Não</span>
+              )}
+            </div>
           </div>
         </div>
       </div>
