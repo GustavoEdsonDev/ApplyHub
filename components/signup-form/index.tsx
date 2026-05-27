@@ -104,7 +104,7 @@ export function SignupForm() {
 
         // Se houver sessão, email confirmation está desabilitado e usuário entrou direto
         if (data.session) {
-          router.replace('/')
+          router.replace('/dashboard/jobs')
           router.refresh()
           return
         }

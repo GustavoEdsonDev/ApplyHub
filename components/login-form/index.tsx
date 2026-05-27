@@ -67,8 +67,8 @@ export function LoginForm() {
         return
       }
 
-      router.replace('/')
-      router.refresh()
+      router.push('/dashboard/jobs')
+      
     })
   }
 

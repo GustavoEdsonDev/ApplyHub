@@ -83,7 +83,7 @@ export function LoginForm() {
           return
         }
 
-        router.replace('/')
+        router.replace('/dashboard/jobs')
         router.refresh()
       } catch (err) {
         console.error('Catch error:', err)
