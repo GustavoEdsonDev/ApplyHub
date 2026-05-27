@@ -12,7 +12,7 @@ export default async function SignupPage() {
   } = await supabase.auth.getUser()
 
   if (user) {
-    redirect("/dashboard/jobs")
+    redirect("/dashboard")
   }
 
   return (
