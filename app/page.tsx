@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ThemeSwitch } from '@/components/theme-switch'
 import dynamic from 'next/dynamic'
 import { ArrowRight, BarChart3, BriefcaseBusiness, CheckCircle2, Search } from 'lucide-react'
 
@@ -11,9 +12,6 @@ import {
 } from '@/components/ui/card'
 import { Mail, Code } from 'lucide-react'
 
-const ThemeSwitch = dynamic(() => import('@/components/theme-switch').then(mod => ({ default: mod.ThemeSwitch })), {
-  ssr: false,
-})
 
 export default function HomePage() {
   return (
