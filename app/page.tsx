@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ThemeSwitch } from '@/components/theme-switch'
+import { HomeNav } from '@/components/home-nav'
 import dynamic from 'next/dynamic'
 import { ArrowRight, BarChart3, BriefcaseBusiness, CheckCircle2, Search } from 'lucide-react'
 
@@ -22,17 +22,7 @@ export default function HomePage() {
             ApplyHub
           </Link>
 
-          <nav className="flex items-center gap-3">
-            <ThemeSwitch />
-            
-            <Button variant="ghost" asChild>
-              <Link href="/auth/login">Entrar</Link>
-            </Button>
-
-            <Button asChild>
-              <Link href="/auth/signup">Criar conta</Link>
-            </Button>
-          </nav>
+          <HomeNav />
         </div>
       </header>
 
