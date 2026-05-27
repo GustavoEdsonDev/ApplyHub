@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { ArrowRight, BarChart3, BriefcaseBusiness, CheckCircle2, Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -20,6 +21,8 @@ export default function HomePage() {
           </Link>
 
           <nav className="flex items-center gap-3">
+            <ThemeSwitch />
+            
             <Button variant="ghost" asChild>
               <Link href="/auth/login">Entrar</Link>
             </Button>
