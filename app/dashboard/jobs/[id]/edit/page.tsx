@@ -11,6 +11,7 @@ import {
   FieldSet,
 } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
+import { statusOptions, workModeOptions, seniorityOptions } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 export default function EditJobPage() {
@@ -35,7 +36,7 @@ export default function EditJobPage() {
       company_name: formData.get('company_name'),
       job_title: formData.get('job_title'),
       job_url: formData.get('job_url'),
-      salary: formData.get('salary'),
+      salary: formData.get('salary') ? Number(formData.get('salary')) : null,
       salary_currency: formData.get('salary_currency'),
       work_mode: formData.get('work_mode'),
       seniority: formData.get('seniority'),
@@ -50,12 +51,18 @@ export default function EditJobPage() {
         body: JSON.stringify(data),
       })
 
-      if (!res.ok) throw new Error('Failed to update job')
+      const responseData = await res.json()
+
+      if (!res.ok) {
+        const errorMsg = responseData?.error || 'Failed to update job'
+        throw new Error(errorMsg)
+      }
 
       router.push(`/dashboard/jobs/${params.id}`)
     } catch (error) {
-      console.error(error)
-      alert('Erro ao atualizar vaga')
+      console.error('Error updating job:', error)
+      const message = error instanceof Error ? error.message : 'Erro ao atualizar vaga'
+      alert(message)
     } finally {
       setIsLoading(false)
     }
@@ -161,14 +168,14 @@ export default function EditJobPage() {
                     <select
                       id="work_mode"
                       name="work_mode"
-                      defaultValue={job.work_mode || 'remote'}
+                      defaultValue={job.work_mode || workModeOptions.remote}
                       className={cn(
                         'h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring'
                       )}
                     >
-                      <option value="remote">Remoto</option>
-                      <option value="on-site">Presencial</option>
-                      <option value="hybrid">Híbrido</option>
+                      <option value={workModeOptions.remote}>Remoto</option>
+                      <option value={workModeOptions.onsite}>Presencial</option>
+                      <option value={workModeOptions.hybrid}>Híbrido</option>
                     </select>
                   </FieldContent>
                 </Field>
@@ -179,14 +186,15 @@ export default function EditJobPage() {
                     <select
                       id="seniority"
                       name="seniority"
-                      defaultValue={job.seniority || 'junior'}
+                      defaultValue={job.seniority || seniorityOptions.junior}
                       className={cn(
                         'h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring'
                       )}
                     >
-                      <option value="junior">Júnior</option>
-                      <option value="mid">Pleno</option>
-                      <option value="senior">Sênior</option>
+                      <option value={seniorityOptions.internship}>Estágio</option>
+                      <option value={seniorityOptions.junior}>Júnior</option>
+                      <option value={seniorityOptions.mid_level}>Pleno</option>
+                      <option value={seniorityOptions.senior}>Sênior</option>
                     </select>
                   </FieldContent>
                 </Field>
@@ -198,16 +206,17 @@ export default function EditJobPage() {
                   <select
                     id="status"
                     name="status"
-                    defaultValue={job.status || 'saved'}
+                    defaultValue={job.status || statusOptions.saved}
                     className={cn(
                       'h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring'
                     )}
                   >
-                    <option value="saved">Salvo</option>
-                    <option value="applied">Aplicado</option>
-                    <option value="interview">Entrevista</option>
-                    <option value="rejected">Rejeitado</option>
-                    <option value="hired">Contratado</option>
+                    <option value={statusOptions.saved}>Salvo</option>
+                    <option value={statusOptions.applied}>Candidatura Enviada</option>
+                    <option value={statusOptions.technical_test}>Teste Técnico</option>
+                    <option value={statusOptions.interview}>Entrevista</option>
+                    <option value={statusOptions.offer}>Oferta</option>
+                    <option value={statusOptions.rejected}>Rejeitado</option>
                   </select>
                 </FieldContent>
               </Field>
